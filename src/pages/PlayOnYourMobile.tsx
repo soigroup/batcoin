@@ -7,9 +7,6 @@ export default function PlayOnYourMobile() {
         alt="qrcode"
         className="object-contain max-w-xs rounded-xl"
       />
-      <a href="#" className="text-2xl font-semibold">
-        @CoolFrogBot
-      </a>
     </div>
   );
 }
