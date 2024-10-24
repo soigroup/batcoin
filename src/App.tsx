@@ -14,7 +14,7 @@ import useTelegramInitData from "./hooks/useTelegramInitData";
 
 const webApp = window.Telegram.WebApp;
 const isDisktop = import.meta.env.DEV
-  ? false
+  ? True
   : Telegram.WebApp.platform === "tdesktop";
 
 function App() {
