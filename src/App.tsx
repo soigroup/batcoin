@@ -117,7 +117,7 @@ function App() {
   }, [user]);
 
 
-
+  if (showSplashScreen) return <SplashScreen />;
   if (isFirstLoad)
     return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
 
