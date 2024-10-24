@@ -75,8 +75,6 @@ function App() {
           telegram_id: user.id,
           first_name: user.first_name,
           last_name: user.last_name,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           username: user.username,
           referred_by: start_param?.replace("ref", ""),
         });
@@ -88,7 +86,6 @@ function App() {
         {
           user: UserType;
           boosters: Record<BoosterTypes, BoosterType>;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } & Record<string, any>
       >("/clicker/sync");
 
@@ -109,15 +106,16 @@ function App() {
       });
     };
 
-    signIn().then(() => setShowSplashScreen(false));
+    signIn().then(() => {
+      setShowSplashScreen(false); // إخفاء شاشة الانتظار
+    });
   }, [user]);
 
+  // إزالة أي شروط تؤدي إلى عرض "Play On Your Mobile"
   if (showSplashScreen) return <SplashScreen />;
+  if (isFirstLoad) return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
 
-  if (isFirstLoad)
-    return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
-
-  // بدء اللعبة مباشرةً إذا كان المستخدم موجودًا
+  // بدء اللعبة مباشرة
   return <RouterProvider router={router} />;
 }
 
