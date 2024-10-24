@@ -39,31 +39,6 @@ function App() {
   }, [userStore.production_per_hour]);
 
   useEffect(() => {
-    if (!balance || !userStore.level?.level) return;
-    const userLevel = userStore.level.level;
-    const newLevels = levels.filter(
-      (level) => balance >= level.from_balance && level.level > userLevel
-    );
-    const maxLevel = newLevels.reduce(
-      (prev, current) => (prev.level > current.level ? prev : current),
-      newLevels[0]
-    );
-    if (
-      userStore.level?.level &&
-      maxLevel?.level &&
-      maxLevel.level > userStore.level.level
-    ) {
-      useUserStore.setState((state) => {
-        state.level = maxLevel;
-        state.max_energy += newLevels.length * levelUp.max_energy;
-        state.earn_per_tap += newLevels.length * levelUp.earn_per_tap;
-        return state;
-      });
-      toast.success(`You have leveled up to level ${maxLevel.level}`);
-    }
-  }, [balance, levels]);
-
-  useEffect(() => {
     if (!user) return () => {};
 
     const signIn = async () => {
@@ -106,16 +81,14 @@ function App() {
       });
     };
 
-    signIn().then(() => {
-      setShowSplashScreen(false); // إخفاء شاشة الانتظار
-    });
+    signIn().then(() => setShowSplashScreen(false));
   }, [user]);
 
-  // إزالة أي شروط تؤدي إلى عرض "Play On Your Mobile"
   if (showSplashScreen) return <SplashScreen />;
-  if (isFirstLoad) return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
 
-  // بدء اللعبة مباشرة
+  if (isFirstLoad)
+    return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
+
   return <RouterProvider router={router} />;
 }
 
