@@ -13,7 +13,7 @@ export default defineConfig({
   // server: {
   //   proxy: {
   //     "/api": {
-  //       target: "http://clicker-game-api.me",
+  //       target: "https://soigroup-batcoin-2318.twc1.net/",
   //       changeOrigin: true,
   //     },
   //   },
