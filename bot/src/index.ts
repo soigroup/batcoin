@@ -1,4 +1,4 @@
-import { APP_URL, PORT, TELEGRAM_TOKEN } from "./constants";
+import { APP_URL, PORT, TELEGRAM_TOKEN } from "./src/constants";
 import express, { Application } from "express";
 import { Telegraf } from "telegraf";
 const bot = new Telegraf(TELEGRAM_TOKEN);
