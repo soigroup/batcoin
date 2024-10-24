@@ -116,9 +116,7 @@ function App() {
     signIn().then(() => setShowSplashScreen(false));
   }, [user]);
 
-  if (!user || isDisktop) return <PlayOnYourMobile />;
 
-  if (showSplashScreen) return <SplashScreen />;
 
   if (isFirstLoad)
     return <FirstTimeScreen startGame={() => setIsFirstLoad(false)} />;
