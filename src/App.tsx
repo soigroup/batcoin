@@ -7,11 +7,15 @@ import { $http, setBearerToken } from "./lib/http";
 import { BoosterType, BoosterTypes, UserType } from "./types/UserType";
 import { useUserStore } from "./store/user-store";
 import { uesStore } from "./store";
+import PlayOnYourMobile from "./pages/PlayOnYourMobile";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
 import useTelegramInitData from "./hooks/useTelegramInitData";
 
 const webApp = window.Telegram.WebApp;
+const isDisktop = import.meta.env.DEV
+  ? false
+  : Telegram.WebApp.platform === "tdesktop";
 
 function App() {
   const userStore = useUserStore();
@@ -39,6 +43,31 @@ function App() {
   }, [userStore.production_per_hour]);
 
   useEffect(() => {
+    if (!balance || !userStore.level?.level) return;
+    const userLevel = userStore.level.level;
+    const newLevels = levels.filter(
+      (level) => balance >= level.from_balance && level.level > userLevel
+    );
+    const maxLevel = newLevels.reduce(
+      (prev, current) => (prev.level > current.level ? prev : current),
+      newLevels[0]
+    );
+    if (
+      userStore.level?.level &&
+      maxLevel?.level &&
+      maxLevel.level > userStore.level.level
+    ) {
+      useUserStore.setState((state) => {
+        state.level = maxLevel;
+        state.max_energy += newLevels.length * levelUp.max_energy;
+        state.earn_per_tap += newLevels.length * levelUp.earn_per_tap;
+        return state;
+      });
+      toast.success(`You have leveled up to level ${maxLevel.level}`);
+    }
+  }, [balance, levels]);
+
+  useEffect(() => {
     if (!user) return () => {};
 
     const signIn = async () => {
@@ -50,6 +79,8 @@ function App() {
           telegram_id: user.id,
           first_name: user.first_name,
           last_name: user.last_name,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           username: user.username,
           referred_by: start_param?.replace("ref", ""),
         });
@@ -61,6 +92,7 @@ function App() {
         {
           user: UserType;
           boosters: Record<BoosterTypes, BoosterType>;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } & Record<string, any>
       >("/clicker/sync");
 
@@ -83,6 +115,8 @@ function App() {
 
     signIn().then(() => setShowSplashScreen(false));
   }, [user]);
+
+  if (!user || isDisktop) return <PlayOnYourMobile />;
 
   if (showSplashScreen) return <SplashScreen />;
 
