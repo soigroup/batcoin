@@ -7,7 +7,6 @@ import { $http, setBearerToken } from "./lib/http";
 import { BoosterType, BoosterTypes, UserType } from "./types/UserType";
 import { useUserStore } from "./store/user-store";
 import { uesStore } from "./store";
-import PlayOnYourMobile from "./pages/PlayOnYourMobile";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toast } from "react-toastify";
 import useTelegramInitData from "./hooks/useTelegramInitData";
@@ -116,7 +115,6 @@ function App() {
     signIn().then(() => setShowSplashScreen(false));
   }, [user]);
 
-  if (!user || isDisktop) return <PlayOnYourMobile />;
 
   if (showSplashScreen) return <SplashScreen />;
 
